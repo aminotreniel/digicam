@@ -1,0 +1,244 @@
+@import "tailwindcss";
+
+/* ============================================================
+   GRAIN — design tokens
+   Warm neutral scale + darkroom orange + LCD green.
+   ============================================================ */
+
+:root {
+  --paper:      #F3EFE9;
+  --paper-2:    #FFFFFF;
+  --paper-3:    #E9E3DA;
+  --line:       #DCD4C8;
+  --line-soft:  #E7E1D7;
+  --ink:        #16130F;
+  --ink-2:      #3D3730;
+  --muted:      #6F665C;
+  --faint:      #A29889;
+
+  --accent:     #DB4A21;
+  --accent-ink: #FFF3EE;
+  --lcd:        #3F7D2B;
+  --gold:       #B07C1B;
+
+  --shadow-sm: 0 1px 2px rgba(30,22,14,.06), 0 2px 8px rgba(30,22,14,.05);
+  --shadow-md: 0 2px 6px rgba(30,22,14,.07), 0 12px 32px rgba(30,22,14,.09);
+  --shadow-lg: 0 4px 12px rgba(30,22,14,.10), 0 32px 64px rgba(30,22,14,.16);
+  --grain-opacity: .34;
+  --ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent);
+}
+
+[data-theme="dark"] {
+  --paper:      #0B0A09;
+  --paper-2:    #141110;
+  --paper-3:    #1C1917;
+  --line:       #2B2624;
+  --line-soft:  #221E1C;
+  --ink:        #F4EFE9;
+  --ink-2:      #CFC6BB;
+  --muted:      #8E8378;
+  --faint:      #61594F;
+
+  --accent:     #FF6236;
+  --accent-ink: #1A0C06;
+  --lcd:        #9FE870;
+  --gold:       #E0B355;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+  --shadow-md: 0 2px 8px rgba(0,0,0,.5), 0 16px 40px rgba(0,0,0,.45);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.55), 0 40px 80px rgba(0,0,0,.55);
+  --grain-opacity: .5;
+  --ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent);
+}
+
+@theme inline {
+  --color-paper:     var(--paper);
+  --color-paper-2:   var(--paper-2);
+  --color-paper-3:   var(--paper-3);
+  --color-line:      var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-ink:       var(--ink);
+  --color-ink-2:     var(--ink-2);
+  --color-muted:     var(--muted);
+  --color-faint:     var(--faint);
+  --color-accent:    var(--accent);
+  --color-accent-ink:var(--accent-ink);
+  --color-lcd:       var(--lcd);
+  --color-gold:      var(--gold);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-serif: var(--font-serif-face), "Iowan Old Style", Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(.16,1,.3,1);
+  --ease-spring:  cubic-bezier(.34,1.56,.64,1);
+}
+
+* { border-color: var(--line); }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+/* ---------- film grain ---------- */
+.grain-layer {
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  animation: grainShift 700ms steps(1) infinite;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0,0) }
+  25%  { transform: translate(-3%, 2%) }
+  50%  { transform: translate(2%, -3%) }
+  75%  { transform: translate(-2%, -2%) }
+  100% { transform: translate(3%, 1%) }
+}
+
+/* ---------- typography helpers ---------- */
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.label-lg { font-size: 11px; letter-spacing: .2em; }
+
+.display {
+  font-weight: 800;
+  letter-spacing: -.045em;
+  line-height: .92;
+}
+.display-tight { letter-spacing: -.055em; }
+
+.editorial { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+
+/* ---------- surfaces ---------- */
+.hairline { border: 1px solid var(--line); }
+.card-surface {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+}
+
+.reticle { position: relative; }
+.reticle::before, .reticle::after {
+  content: ""; position: absolute; width: 9px; height: 9px;
+  border-color: var(--accent); opacity: 0; transition: opacity .3s var(--ease-out-expo);
+}
+.reticle::before { top: 8px; left: 8px; border-top: 1.5px solid; border-left: 1.5px solid; }
+.reticle::after  { bottom: 8px; right: 8px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+.group:hover .reticle::before, .group:hover .reticle::after { opacity: 1; }
+
+/* ---------- focus ---------- */
+:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 3px; }
+
+/* ---------- scrollbars ---------- */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.thin-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- marquee ---------- */
+@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+.marquee-track { animation: marquee var(--dur, 40s) linear infinite; }
+.marquee-paused:hover .marquee-track { animation-play-state: paused; }
+
+/* ---------- LCD blink ---------- */
+@keyframes blink { 0%,49% {opacity:1} 50%,100% {opacity:.25} }
+.blink { animation: blink 1.4s steps(1) infinite; }
+
+@keyframes sweep { 0% { transform: translateX(-120%) } 100% { transform: translateX(220%) } }
+.sweep::after {
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.13) 50%, transparent 80%);
+  animation: sweep 2.4s var(--ease-out-expo) infinite;
+}
+
+/* ---------- shimmer skeleton ---------- */
+@keyframes shimmer { 100% { background-position: -200% 0 } }
+.skeleton {
+  background: linear-gradient(90deg, var(--paper-3) 25%, var(--line-soft) 37%, var(--paper-3) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* ---------- underline link ---------- */
+.link-slide {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size .4s var(--ease-out-expo);
+}
+.link-slide:hover { background-size: 100% 1px; }
+
+/* ---------- range input ---------- */
+input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; }
+input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--line); }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  height: 14px; width: 14px; margin-top: -6px; border-radius: 99px;
+  background: var(--accent); border: 2px solid var(--paper); cursor: grab;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.15); }
+
+.noise-fade {
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+
+.edge-fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+
+/* ---------- layout gutters ---------- */
+.shell { margin-inline: auto; max-width: 1400px; padding-inline: 20px; }
+@media (min-width: 640px) { .shell { padding-inline: 32px; } }
+
+/* a rail that aligns with .shell on the left and bleeds off the right */
+.rail-pad {
+  padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px));
+  padding-right: 20px;
+  scroll-padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px));
+}
+@media (min-width: 640px) {
+  .rail-pad {
+    padding-left: max(32px, calc((100vw - 1400px) / 2 + 32px));
+    padding-right: 32px;
+    scroll-padding-left: max(32px, calc((100vw - 1400px) / 2 + 32px));
+  }
+}
+
+/* text inputs signal focus with their border, not the ring */
+input:focus-visible, textarea:focus-visible { box-shadow: none; }
+.ring-host:focus-within { border-color: var(--accent); }
