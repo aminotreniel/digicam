@@ -198,6 +198,7 @@ export default function Hero() {
                       <CameraArt
                         form={p.form} view={view} body={color.body} bodyDark={color.bodyDark}
                         trim={color.trim} brand={p.brand} model={p.model} uid={`hero-${p.slug}-${ci}-${view}`}
+                        className="drop-shadow-[0_24px_28px_rgba(38,30,24,0.2)]"
                       />
                     </motion.div>
                   </AnimatePresence>
