@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Heart, Eye, Plus, GitCompareArrows } from "lucide-react";
 import CameraArt from "@/components/camera/CameraArt";
-import SampleFrame from "@/components/camera/SampleFrame";
 import Badge from "@/components/ui/Badge";
 import Stars from "@/components/ui/Stars";
 import { badgeMeta, type Product } from "@/data/products";
@@ -14,7 +13,6 @@ import { cn, money } from "@/lib/utils";
 
 export default function ProductCard({ p, index = 0, dense = false }: { p: Product; index?: number; dense?: boolean }) {
   const [ci, setCi] = React.useState(0);
-  const [peek, setPeek] = React.useState(false);
   const color = p.colors[ci];
 
   const add = useCart((s) => s.add);
@@ -52,8 +50,6 @@ export default function ProductCard({ p, index = 0, dense = false }: { p: Produc
       <Link href={`/product/${p.slug}`} className="block">
         <div
           className="reticle relative aspect-[4/3] overflow-hidden border border-line bg-paper-2 transition-colors duration-300 group-hover:border-ink/25"
-          onMouseEnter={() => setPeek(true)}
-          onMouseLeave={() => setPeek(false)}
         >
           {/* backdrop wash */}
           <div
@@ -72,31 +68,14 @@ export default function ProductCard({ p, index = 0, dense = false }: { p: Produc
           </div>
 
           {/* camera */}
-          <motion.div
+          <div
             className="absolute inset-0 grid place-items-center px-[8%] py-[6%]"
-            animate={{ opacity: peek ? 0 : 1, scale: peek ? 0.94 : 1, filter: peek ? "blur(6px)" : "blur(0px)" }}
-            transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
           >
             <CameraArt
               form={p.form} body={color.body} bodyDark={color.bodyDark} trim={color.trim}
               brand={p.brand} model={p.model} uid={`${p.slug}-${ci}`}
             />
-          </motion.div>
-
-          {/* sample frame on hover */}
-          <motion.div
-            className="absolute inset-0"
-            initial={false}
-            animate={{ opacity: peek ? 1 : 0, scale: peek ? 1 : 1.06 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            aria-hidden={!peek}
-          >
-            <SampleFrame look={p.look} seed={p.slug} index={1} year={p.year} className="h-full w-full object-cover" />
-            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/70 to-transparent p-3 pt-8">
-              <span className="label text-white/90">Shot on {p.model}</span>
-              <span className="label text-white/70">{p.look.name}</span>
-            </div>
-          </motion.div>
+          </div>
 
           {/* hover actions */}
           <div className="pointer-events-none absolute inset-x-3 bottom-3 flex translate-y-3 items-center gap-2 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
