@@ -3,9 +3,10 @@ import * as React from "react";
 import ProductCard from "@/components/shop/ProductCard";
 import Button from "@/components/ui/Button";
 import { useSaved } from "@/lib/store";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 
 export default function SavedPage() {
+  const { products } = useCatalog();
   const saved = useSaved((s) => s.saved);
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);

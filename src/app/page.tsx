@@ -7,7 +7,7 @@ import TabbedGrid from "@/components/home/TabbedGrid";
 import Grading from "@/components/home/Grading";
 import Testimonials from "@/components/home/Testimonials";
 import Reveal from "@/components/ui/Reveal";
-import { products } from "@/data/products";
+import { getProducts } from "@/data/remote";
 
 const PROMISES = [
   { icon: Wrench, t: "Bench tested", d: "Eight-point check on every body before it is listed." },
@@ -16,7 +16,10 @@ const PROMISES = [
   { icon: Recycle, t: "Trade-in credit", d: "Send us your old compact for store credit." },
 ];
 
-export default function HomePage() {
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const products = await getProducts();
   const featured = products.filter((p) => p.badges.includes("staff-pick") || p.badges.includes("trending")).slice(0, 6);
   const grails = products.filter((p) => p.badges.includes("rare")).slice(0, 5);
 

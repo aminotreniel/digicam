@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { Search, CornerDownLeft, ArrowUp, ArrowDown } from "lucide-react";
 import CameraArt from "@/components/camera/CameraArt";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { useUI } from "@/lib/store";
 import { cn, money } from "@/lib/utils";
 
@@ -18,6 +18,7 @@ const QUICK = [
 ];
 
 export default function CommandPalette() {
+  const { products } = useCatalog();
   const open = useUI((s) => s.paletteOpen);
   const setOpen = useUI((s) => s.setPaletteOpen);
   const [q, setQ] = React.useState("");

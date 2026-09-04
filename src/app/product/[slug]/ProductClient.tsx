@@ -13,8 +13,9 @@ import Badge from "@/components/ui/Badge";
 import Stars from "@/components/ui/Stars";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
-import { badgeMeta, products, type Product } from "@/data/products";
-import { reviewsFor } from "@/data/reviews";
+import { badgeMeta, type Product } from "@/data/products";
+import type { Review } from "@/data/reviews";
+import { useCatalog } from "@/components/CatalogProvider";
 import { useCart, useSaved, useCompare } from "@/lib/store";
 import { useToast } from "@/components/ui/Toaster";
 import { cn, money } from "@/lib/utils";
@@ -25,7 +26,8 @@ const SPEC_GROUPS = (p: Product) => [
   { title: "Storage & power", rows: [["Media", p.media], ["Battery", p.battery], ["Video", p.video], ["Released", String(p.year)]] },
 ];
 
-export default function ProductClient({ p }: { p: Product }) {
+export default function ProductClient({ p, reviews }: { p: Product; reviews: Review[] }) {
+  const { products } = useCatalog();
   const [ci, setCi] = React.useState(0);
   const [qty, setQty] = React.useState(1);
   const [tab, setTab] = React.useState<"story" | "specs" | "box">("story");
@@ -44,7 +46,7 @@ export default function ProductClient({ p }: { p: Product }) {
   const isSaved = mounted && savedList.includes(p.slug);
   const inCompare = mounted && compare.includes(p.slug);
 
-  const reviews = React.useMemo(() => reviewsFor(p.slug, p.rating, p.reviews), [p]);
+  // Reviews are read from Firestore on the server and passed in as a prop.
   const related = products
     .filter((x) => x.slug !== p.slug && (x.brand === p.brand || x.tags.some((t) => p.tags.includes(t))))
     .slice(0, 4);

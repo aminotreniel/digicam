@@ -7,6 +7,8 @@ import CartDrawer from "@/components/site/CartDrawer";
 import CommandPalette from "@/components/site/CommandPalette";
 import QuickView from "@/components/site/QuickView";
 import Toaster from "@/components/ui/Toaster";
+import CatalogProvider from "@/components/CatalogProvider";
+import { getProducts } from "@/data/remote";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-face", display: "swap" });
@@ -28,21 +30,29 @@ const themeScript = `
 })();
 `;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/** Re-read the catalog from Firestore at most once a minute, so edits made in
+ *  the Firebase console show up without a redeploy. */
+export const revalidate = 60;
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const products = await getProducts();
+
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={`${inter.variable} ${mono.variable} ${serif.variable} antialiased`}>
-        <div className="grain-layer" aria-hidden="true" />
-        <Nav />
-        <main>{children}</main>
-        <Footer />
-        <CartDrawer />
-        <CommandPalette />
-        <QuickView />
-        <Toaster />
+        <CatalogProvider products={products}>
+          <div className="grain-layer" aria-hidden="true" />
+          <Nav />
+          <main>{children}</main>
+          <Footer />
+          <CartDrawer />
+          <CommandPalette />
+          <QuickView />
+          <Toaster />
+        </CatalogProvider>
       </body>
     </html>
   );

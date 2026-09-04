@@ -8,12 +8,14 @@ import SampleFrame from "@/components/camera/SampleFrame";
 import Badge from "@/components/ui/Badge";
 import Stars from "@/components/ui/Stars";
 import Button from "@/components/ui/Button";
-import { bySlug, badgeMeta } from "@/data/products";
+import { badgeMeta } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { useCart, useUI } from "@/lib/store";
 import { useToast } from "@/components/ui/Toaster";
 import { cn, money } from "@/lib/utils";
 
 export default function QuickView() {
+  const { bySlug } = useCatalog();
   const slug = useUI((s) => s.quickView);
   const setSlug = useUI((s) => s.setQuickView);
   const add = useCart((s) => s.add);

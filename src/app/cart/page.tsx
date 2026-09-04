@@ -8,12 +8,13 @@ import Button from "@/components/ui/Button";
 import ProductCard from "@/components/shop/ProductCard";
 import { useCart } from "@/lib/store";
 import { useToast } from "@/components/ui/Toaster";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { money2, clamp } from "@/lib/utils";
 
 const CODES: Record<string, number> = { GRAIN10: 0.1, FIRSTROLL: 0.15 };
 
 export default function CartPage() {
+  const { products } = useCatalog();
   const { lines, setQty, remove } = useCart();
   const push = useToast((s) => s.push);
   const [mounted, setMounted] = React.useState(false);

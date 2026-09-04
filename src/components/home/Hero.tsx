@@ -8,12 +8,15 @@ import { ArrowDown, Camera, RotateCw } from "lucide-react";
 import CameraArt from "@/components/camera/CameraArt";
 import SampleFrame from "@/components/camera/SampleFrame";
 import Button from "@/components/ui/Button";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { cn, money } from "@/lib/utils";
 
-const HERO = ["canon-ixus-70", "panasonic-lumix-dmc-lx3", "fujifilm-finepix-z10fd", "olympus-stylus-720sw"]
-  .map((s) => products.find((p) => p.slug === s)!)
-  .filter(Boolean);
+const HERO_SLUGS = [
+  "canon-ixus-70",
+  "panasonic-lumix-dmc-lx3",
+  "fujifilm-finepix-z10fd",
+  "olympus-stylus-720sw",
+];
 
 const ANNOTATIONS = [
   { top: "24%", left: "6%",  label: "CCD sensor", value: "1/1.7 in" },
@@ -23,6 +26,16 @@ const ANNOTATIONS = [
 ];
 
 export default function Hero() {
+  const { products } = useCatalog();
+  // Resolved from the live catalog; falls back to the first few products if a
+  // hero slug is missing, so the hero never renders empty.
+  const HERO = React.useMemo(() => {
+    const picks = HERO_SLUGS.map((s) => products.find((p) => p.slug === s)).filter(
+      (p): p is NonNullable<typeof p> => Boolean(p)
+    );
+    return picks.length ? picks : products.slice(0, 4);
+  }, [products]);
+
   const reduce = useReducedMotion();
   const [pi, setPi] = React.useState(0);
   const [ci, setCi] = React.useState(0);

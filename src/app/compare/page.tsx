@@ -7,7 +7,8 @@ import CameraArt from "@/components/camera/CameraArt";
 import Stars from "@/components/ui/Stars";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import { products, badgeMeta, type Product } from "@/data/products";
+import { badgeMeta, type Product } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { useCompare, useCart } from "@/lib/store";
 import { useToast } from "@/components/ui/Toaster";
 import { cn, money } from "@/lib/utils";
@@ -30,6 +31,7 @@ const ROWS: { label: string; get: (p: Product) => string | number; best?: "high"
 ];
 
 export default function ComparePage() {
+  const { products } = useCatalog();
   const { items, toggle, clear } = useCompare();
   const add = useCart((s) => s.add);
   const setCartOpen = useCart((s) => s.setOpen);

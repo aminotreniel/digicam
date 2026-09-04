@@ -6,6 +6,7 @@ import { Check, ArrowLeft, ArrowRight, Lock, Truck, Zap, CreditCard, Package } f
 import CameraArt from "@/components/camera/CameraArt";
 import Button from "@/components/ui/Button";
 import { useCart } from "@/lib/store";
+import { placeOrder } from "@/data/remote";
 import { cn, money2 } from "@/lib/utils";
 
 const STEPS = ["Contact", "Delivery", "Payment"] as const;
@@ -84,8 +85,30 @@ export default function CheckoutPage() {
 
   const next = () => {
     if (!validate()) return;
-    if (step < 2) setStep(step + 1);
-    else { setDone(true); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => clear(), 400); }
+    if (step < 2) {
+      setStep(step + 1);
+      return;
+    }
+
+    // Persist the order to Firestore, but never block the confirmation on it:
+    // `placeOrder` swallows write failures and still returns a reference, so a
+    // network problem cannot dead-end a demo checkout.
+    void placeOrder({
+      email: f.email,
+      name: `${f.first} ${f.last}`.trim(),
+      lines: lines.map((l) => ({
+        slug: l.slug,
+        name: l.name,
+        color: l.color,
+        qty: l.qty,
+        price: l.price,
+      })),
+      subtotal,
+    });
+
+    setDone(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => clear(), 400);
   };
 
   if (!mounted) return <div className="shell py-24"><div className="skeleton h-8 w-48" /></div>;

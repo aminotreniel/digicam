@@ -2,7 +2,7 @@
 import * as React from "react";
 import { AnimatePresence, motion } from "motion/react";
 import ProductCard from "@/components/shop/ProductCard";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -13,6 +13,7 @@ const TABS = [
 ];
 
 export default function TabbedGrid() {
+  const { products } = useCatalog();
   const [tab, setTab] = React.useState(0);
   const items = products.filter(TABS[tab].filter).slice(0, 8);
 

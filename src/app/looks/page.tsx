@@ -6,12 +6,13 @@ import { ArrowRight, Aperture } from "lucide-react";
 import SampleFrame from "@/components/camera/SampleFrame";
 import CameraArt from "@/components/camera/CameraArt";
 import Reveal from "@/components/ui/Reveal";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { cn, money } from "@/lib/utils";
 
 const SCENES = ["Horizon", "Night", "Flash", "Interior", "Street"];
 
 export default function LooksPage() {
+  const { products } = useCatalog();
   const [scene, setScene] = React.useState<number | null>(null);
   const [active, setActive] = React.useState(0);
   const p = products[active];

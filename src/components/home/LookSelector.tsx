@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import SampleFrame from "@/components/camera/SampleFrame";
 import CameraArt from "@/components/camera/CameraArt";
-import { products } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { cn, money } from "@/lib/utils";
 
 const LOOKS = [
@@ -17,6 +17,7 @@ const LOOKS = [
 ];
 
 export default function LookSelector() {
+  const { products } = useCatalog();
   const [active, setActive] = React.useState(0);
   const look = LOOKS[active];
   const picks = look.slugs.map((s) => products.find((p) => p.slug === s)!).filter(Boolean);

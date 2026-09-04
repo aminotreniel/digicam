@@ -1,4 +1,6 @@
-import { seeded } from "@/lib/utils";
+// Relative rather than aliased so the seed script can import this module
+// directly under tsx, outside Next's path-alias resolution.
+import { seeded } from "../lib/utils";
 
 const NAMES = ["Mira K.", "Dev A.", "Sam O.", "Nina T.", "Leo P.", "Yuki S.", "Ade B.", "Tomas R.",
   "Priya N.", "Callum W.", "Zoë F.", "Hana M.", "Marco D.", "Ines G.", "Jonah L.", "Riya S."];

@@ -6,7 +6,7 @@ import { SlidersHorizontal, X, LayoutGrid, Rows3, ArrowUpDown } from "lucide-rea
 import ProductCard from "@/components/shop/ProductCard";
 import { Group, Check, PriceRange, Chip } from "@/components/shop/Filters";
 import Button from "@/components/ui/Button";
-import { products, brands, eras, conditions, allTags, priceBounds } from "@/data/products";
+import { useCatalog } from "@/components/CatalogProvider";
 import { cn } from "@/lib/utils";
 
 type Sort = "featured" | "price-asc" | "price-desc" | "newest" | "oldest" | "rating" | "mp";
@@ -24,6 +24,7 @@ const SORTS: { key: Sort; label: string }[] = [
 const FORMS = ["slim", "compact", "boxy", "rugged", "bridge", "swivel"] as const;
 
 export default function ShopClient() {
+  const { products, brands, eras, conditions, allTags, priceBounds } = useCatalog();
   const sp = useSearchParams();
 
   const [q, setQ] = React.useState("");
