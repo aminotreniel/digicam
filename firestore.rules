@@ -5,41 +5,34 @@ rules_version = '2';
 //
 // Several unrelated demo projects share this one Firestore instance. Every
 // project is confined to its own subtree under /apps/{appId}, so no two
-// projects can ever read or write each other's documents by accident:
+// projects can read or write each other's documents by accident:
 //
-//   apps/grain    -> digicam   (GRAIN digicam archive storefront)
-//   apps/fincrm   -> crm       (commercial funding CRM)
-//   apps/aether   -> aether    (design studio landing page)
+//   apps/sunday   -> digicamproject  (Sunday Camera store)
+//   apps/grain    -> digicam         (GRAIN digicam archive)
+//   apps/fincrm   -> crm             (commercial funding CRM)
+//   apps/aether   -> aether          (design studio landing page)
 //
 // These are unauthenticated client demos, so reads and writes are open within
 // that namespace. That is a deliberate trade-off: anyone who reads the public
 // repo can write here. Two things keep the demos presentable anyway:
 //
 //   1. Seeded showcase data and visitor-generated data live in separate
-//      collections. Nothing the demo writes at runtime is read back into the
-//      showcase surfaces, so a vandalised write cannot blank a client demo.
-//   2. `npm run seed` is idempotent — rerun it to restore any project's
-//      showcase data to a known-good state.
+//      collections. Nothing written at runtime is read back into the showcase
+//      surfaces, so a vandalised write cannot blank a client demo.
+//   2. `npm run seed` is idempotent — rerun it to restore showcase data.
 //
-// Anything outside /apps is denied outright, so a stray client cannot create
-// junk at the database root.
+// Anything outside /apps is denied, so a stray client cannot create junk at
+// the database root.
 // ---------------------------------------------------------------------------
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Per-app metadata document (name, description, seed timestamp).
     match /apps/{appId} {
       allow read, write: if true;
     }
-
-    // Everything belonging to a single app: products, reviews, orders,
-    // businesses, content, signups, and so on.
     match /apps/{appId}/{document=**} {
       allow read, write: if true;
     }
-
-    // Deny everything else.
     match /{document=**} {
       allow read, write: if false;
     }
